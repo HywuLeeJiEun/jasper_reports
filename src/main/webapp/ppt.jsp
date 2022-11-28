@@ -1,3 +1,9 @@
+<%@page import="java.io.OutputStream"%>
+<%@page import="net.sf.jasperreports.swing.JRViewer"%>
+<%@page import="javax.swing.JFrame"%>
+<%@page import="net.sf.jasperreports.export.SimplePptxReportConfiguration"%>
+<%@page import="net.sf.jasperreports.export.SimplePptxExporterConfiguration"%>
+<%@page import="java.io.FileInputStream"%>
 <%@page import="net.sf.jasperreports.export.SimpleOutputStreamExporterOutput"%>
 <%@page import="net.sf.jasperreports.export.SimpleExporterInput"%>
 <%@page import="java.io.ByteArrayOutputStream"%>
@@ -42,6 +48,7 @@
 	 // (1)템플레이트 XML 컴파일 (여기가 안됨!) => 이게 결국 .jasper를 불러오기 위함!! (jrxml을 컴파일 한 것이 jasper)
 	 //JasperReport jasperReport = JasperCompileManager.compileReport(templatePath);
 	 JasperReport jasperReport = JasperCompileManager.compileReport(templatePath);
+	 
 	
 	 // (2)파라메타 생성	  
 	 Map<String,Object> paramMap = new HashMap<String,Object>();
@@ -60,13 +67,48 @@
 	
 	 JRPptxExporter pptxExporter = new JRPptxExporter();
 	 pptxExporter.setExporterInput(new SimpleExporterInput(print));
-	 pptxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(new File("C:\\1.pptx")));
+	 pptxExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(new File("D:\\workspace\\BBS_test_backup\\src\\main\\webapp\\WEB-INF\\Files\\1.pptx")));
+	 
+	 
+	 // frame으로 출력
+	 /* JFrame frame = new JFrame("Report");
+	 frame.getContentPane().add(new JRViewer(print));
+	 frame.pack();
+	 frame.setVisible(true); */
+	 
+	 
 	 pptxExporter.exportReport();
      
 	} catch (Exception ex) {
 	     ex.printStackTrace();
 	
 	}
+	
+	String fileName = "1.pptx";
+	String downLoadFile = "D:\\workspace\\BBS_test_backup\\src\\main\\webapp\\WEB-INF\\Files\\" + fileName;
+	
+	File file = new File(downLoadFile);
+	FileInputStream in = new FileInputStream(downLoadFile);
+	
+	fileName = new String(fileName.getBytes("utf-8"), "8859_1");
+	
+	response.setContentType("application/octet-stream");
+	response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+	
+	out.clear();
+	out = pageContext.pushBody();
+	
+	OutputStream os = response.getOutputStream();
+	
+	int length;
+	byte[] b = new byte[(int)file.length()];
+	
+	while ((length = in.read(b)) >0) {
+		os.write(b,0,length);
+	}
+	
+	os.flush();
+
 %>
 
 </body>
