@@ -53,7 +53,8 @@
 	 // (2)파라메타 생성	  
 	 Map<String,Object> paramMap = new HashMap<String,Object>();
 	
-	 paramMap.put("deadLine","2022-11-14");	  
+	 // 해당 파라미터를 변경해 데이터를 조회함
+	 paramMap.put("deadLine","2022-11-21");	  
 	
 	 // (3)데이타소스 생성
 	 Class.forName("org.mariadb.jdbc.Driver");
